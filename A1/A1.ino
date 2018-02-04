@@ -29,6 +29,7 @@ float angularScaleFactor = 7;
 //RFID
 byte slaveSelectPin = 10;
 byte resetPin = 17; //A4 as digital pin
+MFRC522::MIFARE_Key key = {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}};
 
 //Robot Dimensions
 float wheelBase = 0.285;
@@ -65,6 +66,7 @@ void setup()
 
 void loop()
 {
+  //Check for RC commands
   if ((abs(rc.scaledCommand1()) > 0.2) || (abs(rc.scaledCommand2()) > 1.05)) {
     float left = (rc.scaledCommand1() + (rc.scaledCommand2() * (wheelBase / 2.0)));
     float right = (rc.scaledCommand1() - (rc.scaledCommand2() * (wheelBase / 2.0)));
@@ -95,4 +97,27 @@ void loop()
   else {
     drive.stop();
   }
+
+  // Look for new RFID cards
+  if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
+    //Clear display
+    lcd.clear();
+    byte length = 18;
+    byte msg[length];
+    if (rfid.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, 4, &key, &(rfid.uid)) == MFRC522::STATUS_OK) {
+      rfid.MIFARE_Read(4, msg, &length);
+      //Write information to LCD screen
+      lcd.setCursor(0,0);
+      lcd.printstr(msg);
+    }
+    if (rfid.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, 1, &key, &(rfid.uid)) == MFRC522::STATUS_OK) {
+      rfid.MIFARE_Read(1, msg, &length);
+      //Write information to LCD screen
+      lcd.setCursor(0,1);
+      lcd.printstr(msg);
+    }
+    rfid.PICC_HaltA();
+    rfid.PCD_StopCrypto1();
+  }
+
 }
