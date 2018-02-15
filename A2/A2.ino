@@ -14,8 +14,8 @@ byte latchPin = 12;
 byte clockPin = 4;
 byte enablePin = 7;
 byte dataPin = 8;
-byte armSpeedPin = 11;
-byte winchSpeedPin = 3;
+byte armSpeedPin = 11; //M1
+byte winchSpeedPin = 3; //M2
 
 //Remote Control (RC)
 byte armPin = 9;
