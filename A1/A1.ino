@@ -25,6 +25,7 @@ byte rightSpeedPin = 6; //PWM input
 byte linearPin = 2;
 byte angularPin = 3;
 float angularScaleFactor = 7;
+byte robotDirectionPin = 15; //specifies which side of robot is "forward"; A1 as digital pin
 
 //RFID
 byte resetPin = 16; //A2 as digital pin
@@ -46,7 +47,7 @@ Driving drive = Driving(rightSpeedPin, rightDirectionA, rightDirectionB, leftSpe
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, 2, 16);
 MFRC522 rfid1 = MFRC522(slaveSelectPin1, resetPin);
 MFRC522 rfid2 = MFRC522(slaveSelectPin2, resetPin);
-RC rc = RC(linearPin, 1, angularPin, angularScaleFactor);
+RC rc = RC(linearPin, 1, angularPin, angularScaleFactor, robotDirectionPin, 1);
 
 
 /////////////
@@ -95,7 +96,12 @@ void loop()
       right = -pow(2.0, 4.4 * abs(right) + 3.6);
     }
     
-    drive.drive((int)left, (int)right);
+    if (rc.scaledCommand3() > 0) {
+      drive.drive((int)left, (int)right);
+    }
+    else {
+      drive.drive(-(int)right, -(int)left);
+    }
   }
   else {
     drive.stop();
