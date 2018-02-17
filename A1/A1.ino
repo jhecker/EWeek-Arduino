@@ -27,8 +27,8 @@ byte angularPin = 3;
 float angularScaleFactor = 7;
 
 //RFID
-byte resetPin = 10;
-byte slaveSelectPin1 = 16; //A2 as digital pin
+byte resetPin = 16; //A2 as digital pin
+byte slaveSelectPin1 = 10;
 byte slaveSelectPin2 = 17; //A3 as digital pin
 MFRC522::MIFARE_Key key = {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}};
 
