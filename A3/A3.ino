@@ -14,9 +14,9 @@
 ////////////////
 
 //RFID
-byte resetPin = 16; //A2 as digital pin
+byte resetPin = 8;
 byte slaveSelectPin1 = 10;
-byte slaveSelectPin2 = 17; //A3 as digital pin
+byte slaveSelectPin2 = 9;
 MFRC522::MIFARE_Key key = {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}};
 
 
